@@ -55,8 +55,20 @@ void test_dot_stuffing(void)
     TEST_CHECK(qp::encode("\r\n.\r\n") == std::string("\r\n.\r\n"));
 }
 
+void test_decode(void)
+{
+    TEST_CHECK(qp::decode("1234567890123456789012345678901234567890123456789012345678901234567890123456=\r\n78901234567") == "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567");
+    TEST_CHECK(qp::decode("123456789012345678901234567890123456789012345678901234567890123456789012345=\r\n=3D78901234567") == "123456789012345678901234567890123456789012345678901234567890123456789012345=78901234567");
+    TEST_CHECK(qp::decode("12345678901234567890123456789012345678901234567890123456789012345678901234=\r\n=3D678901234567") == "12345678901234567890123456789012345678901234567890123456789012345678901234=678901234567");
+    TEST_CHECK(qp::decode("=C3=A4=C3=B6=C3=BC") == "äöü");
+    TEST_EXCEPTION(qp::decode("0123==5678901234567", qp::flags::throw_on_invalid_input), std::runtime_error);
+    TEST_EXCEPTION(qp::decode("0123=X5678901234567", qp::flags::throw_on_invalid_input), std::runtime_error);
+    TEST_EXCEPTION(qp::decode("0123=6=\r\n78901234567", qp::flags::throw_on_invalid_input), std::runtime_error);
+}
+
 TEST_LIST = {
     {"simple html", test_html},
     {"line breaks", test_line_breaks},
     {"dot stuffing", test_dot_stuffing},
+    {"decode", test_decode},
     {NULL, NULL}};

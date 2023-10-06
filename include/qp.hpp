@@ -13,7 +13,7 @@
 
 #include <string>
 
-namespace qp { 
+namespace qp {
     enum flags: unsigned int{
         none = 0,
         use_dot_stuffing = 1,

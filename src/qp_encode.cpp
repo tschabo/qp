@@ -1,7 +1,6 @@
 #include "qp.hpp"
 
 #include <string_view>
-#include <array>
 
 QP_API std::string qp::encode(const std::string &str, qp::flags f)
 {
